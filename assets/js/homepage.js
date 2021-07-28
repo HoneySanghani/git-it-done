@@ -1,11 +1,57 @@
+var userFormEl=document.querySelector("#user-form");
+var nameInputEl=document.querySelector("#username");
+var repoSearchTerm=document.querySelector("#repo-search-term");
+var repoContainerEl=document.querySelector("#repos-container");
+var formSubmitHandler=function(event){
+    event.preventDefault();
+    var username=nameInputEl.value.trim();
+    if(username){
+        getUserRepos(username);
+        nameInputEl.value=" ";
+    }
+    else{
+        alert("Please enter User Name");
+    }
+}
 var getUserRepos=function(user){
     //format gitHub url
     var apiUrl="https://api.github.com/users/" + user + "/repos";
     //fetch data from api
    fetch(apiUrl).then(function(response) {
         response.json().then(function(data) {
-          console.log(data);
+          displayRepos(data,user);
         });
       });
 };
-getUserRepos("facebook");
+var displayRepos=function(repos,searchTerm){
+    console.log(repos);
+    console.log(searchTerm);
+    for(var i=0;i<repos.length;i++){
+        //format repos name
+        var  repoName=repos[i].owner.login + "/" +repos[i].name;
+        console.log(repoName);
+        //create container for each repo
+        var repoDivEl=document.createElement("div");
+        repoDivEl.classList="list-item flex-row justify-space-between align-center";
+        //span element to store repo name
+        var titleSpanEl=document.createElement("span");
+        titleSpanEl.textContent=repoName;
+
+        var statusSpanEl=document.createElement("span");
+        statusSpanEl.classList="flex-row align-center";
+        //check for open issues in repo
+        if(repos[i].open_issues_count>0){
+            statusSpanEl.innerHTML =
+            "<i class='fas fa-times status-icon icon-danger'></i>" + repos[i].open_issues_count + " issue(s)";
+        }
+        else{
+            statusSpanEl.innerHTML = "<i class='fas fa-check-square status-icon icon-success'></i>";
+        }
+        repoDivEl.append(titleSpanEl);
+        repoDivEl.append(statusSpanEl);
+        repoContainerEl.append(repoDivEl);
+    }
+    // repoContainerEl.textContent = "";
+    repoSearchTerm.textContent=searchTerm;
+}
+userFormEl.addEventListener("submit",formSubmitHandler);
