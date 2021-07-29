@@ -42,10 +42,10 @@ var displayRepos=function(repos,searchTerm){
     for(var i=0;i<repos.length;i++){
         //format repos name
         var  repoName=repos[i].owner.login + "/" +repos[i].name;
-        console.log(repoName);
         //create container for each repo
-        var repoDivEl=document.createElement("div");
-        repoDivEl.classList="list-item flex-row justify-space-between align-center";
+        var repoEl=document.createElement("a");
+        repoEl.classList="list-item flex-row justify-space-between align-center";
+        repoEl.setAttribute("href", "./single-repo.html?repo="+repoName);
         //span element to store repo name
         var titleSpanEl=document.createElement("span");
         titleSpanEl.textContent=repoName;
@@ -60,9 +60,9 @@ var displayRepos=function(repos,searchTerm){
         else{
             statusSpanEl.innerHTML = "<i class='fas fa-check-square status-icon icon-success'></i>";
         }
-        repoDivEl.append(titleSpanEl);
-        repoDivEl.append(statusSpanEl);
-        repoContainerEl.append(repoDivEl);
+        repoEl.append(titleSpanEl);
+        repoEl.append(statusSpanEl);
+        repoContainerEl.append(repoEl);
     }
     // repoContainerEl.textContent = "";
     repoSearchTerm.textContent=searchTerm;
